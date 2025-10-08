@@ -1,14 +1,11 @@
-import { Link } from "react-router-dom";
+import React from "react";
+import Item from "./Item";
 
-const ItemList = ({ items }) => {
+const ItemList = ({ products }) => {
   return (
-    <div>
-      {items.map(item => (
-        <div key={item.id}>
-          <h3>{item.name}</h3>
-          <p>${item.price}</p>
-          <Link to={`/item/${item.id}`}>Ver detalle</Link>
-        </div>
+    <div className="grid-products">
+      {products.map(prod => (
+        <Item key={prod.id} product={prod} />
       ))}
     </div>
   );

@@ -1,25 +1,32 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/config";
 import ItemDetail from "../components/ItemDetail";
-import { products } from "../data/products";
 
 const ItemDetailContainer = () => {
-  const { itemId } = useParams();
-  const [item, setItem] = useState(null);
+  const [product, setProduct] = useState(null);
+  const { productId } = useParams();
 
   useEffect(() => {
-    const fetchItem = () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(products.find(p => p.id === parseInt(itemId)));
-        }, 500);
-      });
+    const fetchProduct = async () => {
+      const docRef = doc(db, "products", productId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setProduct({ id: docSnap.id, ...docSnap.data() });
+      } else {
+        setProduct(null);
+      }
     };
 
-    fetchItem().then(setItem);
-  }, [itemId]);
+    fetchProduct();
+  }, [productId]);
 
-  return item ? <ItemDetail item={item} /> : <p>Cargando...</p>;
+  return (
+    <div className="container">
+      {product ? <ItemDetail product={product} /> : <p>Producto no encontrado</p>}
+    </div>
+  );
 };
 
 export default ItemDetailContainer;

@@ -1,0 +1,20 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.navbar a {
+  margin-right: 16px;
+  font-size: 18px;
+  color: var(--color-dark);
+}
+
+.navbar a.active {
+  color: var(--color-primary);
+}
+
+.navbar .cart-widget {
+  margin-left: auto;
+  font-size: 20px;
+}

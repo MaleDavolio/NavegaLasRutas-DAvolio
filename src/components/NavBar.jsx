@@ -1,16 +1,18 @@
+import React from "react";
 import { Link } from "react-router-dom";
+import CartWidget from "./CartWidget";
+import "../styles/global.css";
+import "../styles/NavBar.css";
 
-const categories = ["ropa", "accesorios"];
-
-const Navbar = () => {
+const NavBar = () => {
   return (
-    <nav>
-      <Link to="/">Todos</Link>
-      {categories.map(cat => (
-        <Link key={cat} to={`/category/${cat}`}>{cat}</Link>
-      ))}
+    <nav className="navbar container">
+      <Link to="/">Home</Link>
+      <Link to="/category/electronics">Electrónicos</Link>
+      <Link to="/category/books">Libros</Link>
+      <CartWidget />
     </nav>
   );
 };
 
-export default Navbar;
+export default NavBar;

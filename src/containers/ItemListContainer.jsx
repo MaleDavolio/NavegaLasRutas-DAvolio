@@ -1,29 +1,39 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../firebase/config";
+import ItemList from "../components/ItemList";
 import { useParams } from "react-router-dom";
-import ItemList from "./components/ItemList";
-import { products } from "../data/products";
 
 const ItemListContainer = () => {
+  const [products, setProducts] = useState([]);
   const { categoryId } = useParams();
-  const [items, setItems] = useState([]);
 
   useEffect(() => {
-    const fetchProducts = () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          if (categoryId) {
-            resolve(products.filter(p => p.category === categoryId));
-          } else {
-            resolve(products);
-          }
-        }, 500);
-      });
+    const fetchProducts = async () => {
+      let q;
+      const productsCollection = collection(db, "products");
+      if (categoryId) {
+        q = query(productsCollection, where("category", "==", categoryId));
+      } else {
+        q = productsCollection;
+      }
+      const snapshot = await getDocs(q);
+      const productsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setProducts(productsData);
     };
 
-    fetchProducts().then(setItems);
+    fetchProducts();
   }, [categoryId]);
 
-  return <ItemList items={items} />;
+  return (
+    <div className="container">
+      <h2>Catálogo</h2>
+      <ItemList products={products} />
+    </div>
+  );
 };
 
 export default ItemListContainer;
